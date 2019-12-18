@@ -72,7 +72,7 @@ $(document).ready(function () {
     setNotesColoring();         
 
     // set the time for updating the coloring of textarea based on the hour
-    setInterval(setNotesColoring, 3540000) // repeat the execution every 59th minute
+    setInterval(setNotesColoring, 1000) // repeat the execution every 59th minute
 
     // Updates the notes from storage
     fillUpNotesFromStorage();
