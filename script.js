@@ -1,8 +1,10 @@
 $(document).ready(function () {
 
     const notesStorageIdentifier = "notes";
+    const dateOfNotesItendtifier = "DON";
 
-    var notes = localStorage.getItem(notesStorageIdentifier);
+    var notes = JSON.parse(localStorage.getItem(notesStorageIdentifier));
+    var dateOfNotes = localStorage.getItem(dateOfNotesItendtifier);
     
     function setNotesColoring() {
         // var now = moment("1500", "hmm").get("h") - 9;       /* FOR TESTING ONLY */
@@ -32,16 +34,16 @@ $(document).ready(function () {
 
         var index = $(".saveBtn").index(this);
 
-        notes[index] = $(this).parent().children(".description").text();
+        notes[index] = $(this).parent().children(".description").val();
 
         localStorage.setItem(notesStorageIdentifier,JSON.stringify(notes));
 
     }
 
     function fillUpNotesFromStorage(){
-        $(".saveBtn").each(function(index) {
-            if(notes[index] !== null){
-                $(".description").text(notes[index]);
+        $(".description").each(function(index) {
+            if(notes[index] !== null && notes[index] !== ""){
+                $(this).val(notes[index]);
             }            
         });
     }
@@ -50,11 +52,26 @@ $(document).ready(function () {
         var notes = new Array(9);
     }
 
+    if(dateOfNotes === null){
+        var dateOfNotes = moment().format("dddd, MMMM Do ");
+    }
+
+
     // Update the current Date
     $("p#currentDay").text(moment().format("dddd, MMMM Do "));
+    localStorage.setItem(dateOfNotesItendtifier,moment().format("dddd, MMMM Do "));
+
+    // check if the notes are for current date. If not, initialize them
+    if(dateOfNotes !== moment().format("dddd, MMMM Do ")){
+        if(notes !== undefined){
+            notes.fill("");
+        }
+    }
     
-    setNotesColoring();         // Call initially without delay
-    //var notesColoringInterval = 
+    // Call initially without delay
+    setNotesColoring();         
+
+    // set the time for updating the coloring of textarea based on the hour
     setInterval(setNotesColoring, 3540000) // repeat the execution every 59th minute
 
     // Updates the notes from storage
